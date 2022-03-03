@@ -1,0 +1,144 @@
+{% extends "app/base.html" %}
+{% block titulo %}Welcome{% endblock %}
+{% block estilo %}
+
+
+{% endblock  %}
+{% block contenido %}
+<div class="row">
+    <div class="container col-6 mt-5">
+        <h1>TV Shows</h1>
+        <hr>
+        <table id="tabla-datatable" class='table table-striped table-bordered table-hover'>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Network</th>
+                    <th>Release Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbod>
+                {%for show in alltvshows%}
+                <tr>
+                    <td>{{show.id}}</td>
+                    <td>{{show.title}}</td>
+                    <td>{{show.network.name}}</td>
+                    <td>{{show.releasedate}}</td>
+                    <td>
+                        <button 
+                        data-url="{%url 'tv-shows:eliminar' id=show.id%}"
+                        class='btn btn-sm btn-danger btnMostrarModal'>
+                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <a href="/shows/{{show.id}}" class='btn btn-sm btn-primary'><i class="fa fa-info" aria-hidden="true"></i> Info</a>
+                        <a href="/shows/{{show.id}}/edit" class='btn btn-sm btn-warning'><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> Edit</a>
+                        <a href="/shows/{{show.id}}/destroy"class='btn btn-sm btn-danger'><i class="fa fa-trash fa-lg" aria-hidden="true"> Del</i></a> 
+                    </td>
+                </tr>
+                {%endfor%}
+            </tbod>
+        </table>
+        <a href="{% url 'tv-shows:agregar'%}" class='btn btn-primary'><i class="fa fa-user-plus" aria-hidden="true"></i> Añadir Registro </a>
+    <div class="container col-10 mt-5">
+        <h1>Networks</h1>
+        <hr>
+        <table id="tabla-datatable2" class='table table-striped table-bordered table-hover'>
+            <thead>
+                <tr>
+                    <th>Networks</th>
+                </tr>
+            </thead>
+            <tbod>
+                {%for network in allnetworks%}
+                <tr>
+                    <td>{{network.name}} id: {{network.id}}</td>
+                </tr>
+                {%endfor%}
+            </tbod>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ELIMINANDO</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        Seguro que quieres eliminar este registro?
+        <span id='url_prueba'></span>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id='btnEliminar' data-url="">Eliminar!</button>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock  %}
+
+
+{% block scripts %}
+    <script>
+
+$(".btnMostrarModal").click(function(){
+
+    const url= $(this).data("url");
+    $("#btnEliminar").attr("data-url",url);
+
+    $("#exampleModal").modal("show");
+});
+
+$("#btnEliminar").click(function(){
+    const url= $("#btnEliminar").attr("data-url");
+    //alert("Eliminar"+ window.location)
+    //window.location=$("#".concat(url)).attr("data-url")
+
+    $.get(url,function(data,status){
+        
+        $("#exampleModal").modal("hide");
+        //location.href=location.href;
+        location.reload();
+        //toastr.success("ELIMINADO");
+        
+    })
+
+});
+
+        $(document).ready( function () {
+    let htmlDataTable = "<'row'<'col-sm-8 col-md-8'lB><'col-sm-8 col-md-4'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
+    $('#tabla-datatable').DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.11.4/i18n/es-cl.json"
+                },
+                responsive: true,
+                dom: htmlDataTable,
+                buttons: [
+                    'copy', 'excel', 'pdf'
+                ]
+            });
+    
+} );
+        $(document).ready( function () {
+    let htmlDataTable = "<'row'<'col-sm-12 col-md-8'lB><'col-sm-12 col-md-4'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>";
+    $('#tabla-datatable2').DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.11.4/i18n/es-cl.json"
+                },
+                responsive: true,
+                dom: htmlDataTable,
+                buttons: [
+                    'copy', 'excel', 'pdf'
+                ]
+            });
+    
+} );
+    </script>
+{% endblock  %}

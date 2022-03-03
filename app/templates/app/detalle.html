@@ -1,0 +1,78 @@
+{% extends "app/base.html" %}
+{% block titulo %}Welcome{% endblock %}
+{% block estilo %}
+
+
+{% endblock  %}
+{% block contenido %}
+<div class="container mt-5">
+    <div class='row'>
+        <div class='col-6'>
+            <h1 class="d-flex">{{detailstvshow.title}}</h1>
+        </div>
+        <div class='col-6 d-flex flex-row-reverse btn-sm'>
+            <a href='/' class="btn btn-success" type="submit">Go Back!</a>
+        </div>
+    </div>
+    <hr>
+    <p>Network: {{detailstvshow.network.name}}</p>
+    <p>Release Date: {{detailstvshow.releasedate}}</p>
+    <p>Description: {{detailstvshow.description}}</p>
+    <hr>
+    <p>Updated: {{detailstvshow.updated_at}}</p>
+    <hr>
+    <a href="/shows/{{detailstvshow.id}}/edit" class='btn btn-sm btn-warning'><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> Edit</a>
+    <a class='btn btn-sm btn-danger' href="/shows/{{detailstvshow.id}}/destroy"><i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete</a>
+    <button 
+                    data-url="{%url 'tv-shows:eliminar' id=detailstvshow.id%}"
+                    class='btn btn-sm btn-danger btnMostrarModal'>
+                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                    </button>
+
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ELIMINANDO</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        Seguro que quieres eliminar este registro?
+        <span id='url_prueba'></span>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id='btnEliminar' data-url="">Eliminar!</button>
+        </div>
+    </div>
+    </div>
+{% endblock  %}
+{% block scripts %}
+
+<script>
+    $(".btnMostrarModal").click(function(){
+
+    const url= $(this).data("url");
+    $("#btnEliminar").attr("data-url",url);
+
+    $("#exampleModal").modal("show");
+});
+
+$("#btnEliminar").click(function(){
+    const url= $("#btnEliminar").attr("data-url");
+    //alert("Eliminar"+ window.location)
+    //window.location=$("#".concat(url)).attr("data-url")
+
+    $.get(url,function(data,status){
+        
+        $("#exampleModal").modal("hide");
+        location.href='/shows';
+        
+    })
+
+});
+</script>
+
+    {% endblock  %}

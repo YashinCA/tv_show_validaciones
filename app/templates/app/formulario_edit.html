@@ -1,0 +1,68 @@
+{% extends "app/base.html" %}
+{% block titulo %}New TV-Show{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class='row'>
+        <div class='col-6'>
+            <h1 class="d-flex">Edit TV-Show</h1>
+        </div>
+        <div class='col-6 d-flex flex-row-reverse btn-sm'>
+            <a href='/' class="btn btn-success" type="submit">Go Back!</a>
+        </div>
+    </div>
+    <hr>
+    <div class='row'>
+        <div class='col-6'>
+            {% if errores %}
+            <div class='alert alert-danger'>
+                <ol>
+                    {% for item in errores %}
+                    <li>{{item}}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            {% endif %}
+            <form action='{% url 'tv-shows:actualizar' id=edit.id %}' method='post'>
+                {% csrf_token %}
+                <div class="row g-3 align-items-center">
+                    <div class="col-4">
+                        <label for="title" class="col-form-label">Title</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" id="nombre" class="form-control" value='{{edit.title}}' name='title' required>
+                    </div>
+                    <div class="col-4">
+                        <label for="network" class="col-form-label">Network</label>
+                    </div>
+                    <div class="col-8">
+                        <select name="network" id="select" class="form-select form-control-sm" required>
+                            <option value='{{network_default_id}}'>{{network_default_name}}</option>
+                            {% for netw in networks %}
+                                <option value="{{netw.id}}">{{netw.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="releasedate" class="col-form-label">Release Date</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="date" id="start" name="releasedate" class="form-control" value='{{release_date}}' max="{{date_today}}" required>
+                    </div>
+                    <div class="col-4">
+                        <label for="floatingTextarea">Description</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea name="description" class="form-control" placeholder="Tv-Show Description" id="floatingTextarea">{{edit.description}}</textarea>
+                    </div>
+                    <div class="col-4">
+                    </div>
+                    <div class="col-8">
+                        <button type="submit" class="btn btn-warning"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> Editar</button>
+                    </div>
+                </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock  %}

@@ -1,0 +1,87 @@
+{% extends "app/base.html" %}
+
+<a href='/' class="btn btn-success" type="submit">Go Back!</a>
+
+{% block titulo %}New TV-Show{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class='row'>
+        <div class='col-6'>
+            <h1 class="d-flex">New TV-Show</h1>
+        </div>
+        <div class='col-6 d-md-flex flex-row-reverse btn-sm'>
+            <a href='/' class="btn btn-success" type="submit">Go Back!</a>
+        </div>
+    </div>
+    <hr>
+
+    <div class='row'>
+        <div class='col-6'>
+            {% if errores %}
+            <div class='alert alert-danger'>
+                <ol>
+                    {% for item in errores %}
+                    <li>{{item}}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            {% endif %}
+            <form action='{% url 'tv-shows:crear'%}' method='post'>
+                {% csrf_token %}
+                <div class="row g-3 align-items-center">
+                    <div class="col-4">
+                        <label for="title" class="col-form-label">Title</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" id="title" class="form-control" name='title' required>
+                    </div>
+                    <div class="col-4">
+                        <label for="network" class="col-form-label">Network</label>
+                    </div>
+                    <div class="col-8">
+                        <select name="network" id="select" class="form-select form-control-sm" required>
+                            <option value="" >Seleccionar</option>
+                            {% for netw in networks %}
+                                <option value="{{netw.id}}">{{netw.name}}</option>
+                            {% endfor %}
+                            <option value="otro">Agregar Nuevo</option>
+                        </select>
+                        <input type="text" name="network-new" id="probar" placeholder="👉Enter new Network👈" class="form-control form-control-sm d-none border border-success border-4 mt-3">
+                    </div>
+                    <div class="col-4">
+                        <label for="releasedate" class="col-form-label">Release Date</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="date" id="start" name="releasedate" class="form-control" max="{{date_today}}" required>
+                    </div>
+                    <div class="col-4">
+                        <label for="floatingTextarea">Description</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea name="description" class="form-control" placeholder="Tv-Show Description" id="floatingTextarea"></textarea>
+                    </div>
+                    <div class="col-4">
+                    </div>
+                    <div class="col-8">
+                        <button type="submit" class="btn btn-primary">Add Tv-Show</button>
+                    </div>
+                </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock  %}
+{% block scripts %}
+<script>
+    $('#select').on('change',function(){
+        if ( $(this).val() =='otro' ){
+            $('#probar').removeClass('d-none');
+        }
+        else{
+            $('#probar').addClass('d-none');
+        }
+    })
+
+</script>
+{% endblock  %}
